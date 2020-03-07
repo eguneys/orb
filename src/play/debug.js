@@ -6,8 +6,10 @@ import { vec2 } from '../vec2';
 export default function Debug(play, ctx) {
   const { textures, events, config } = ctx;
 
+  const makeBg = () => sprite(textures['moonclouds']);
+
   const makeOrb = () => sprite(textures[Math.random() < 0.5?'heart':'orb']);
-  const makeFlame = () => asprite(textures['flame'], 500);
+  const makeFlame = () => asprite(textures[Math.random()<0.8?'smoke':'magic'], 500);
 
   let flames = [];
 
@@ -66,6 +68,10 @@ export default function Debug(play, ctx) {
 
   this.container = lazy(() => {
     let container = dContainer();
+
+    let bgSprite = makeBg();
+    container.addChild(bgSprite);
+
     for (let i = 0; i< 100; i++) {
       let orbSprite = makeOrb();
       addToViewport(orbSprite, vec2(i * 32,(32 / i)*32));
@@ -74,6 +80,9 @@ export default function Debug(play, ctx) {
       let flameSprite = makeFlame();
       addToViewport(flameSprite, vec2(i * 32, Math.sin(i) * 32));
       container.addChild(flameSprite);
+      if (Math.random() < 0.5) {
+        flameSprite.scale.x = -1;
+      }
       flames.push(flameSprite);
 
     }

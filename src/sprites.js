@@ -1,15 +1,18 @@
 export default function sprites(resources) {
 
-  let orb = resources['orb'].spritesheet;
-  let heart = resources['heart'].spritesheet;
-  let flame = resources['flame'].spritesheet;
-  let hud = resources['hud'].spritesheet;
+  const ssTextures = name => resources[name].spritesheet.textures;
 
   return {
-    'orb': orb.textures['orb.aseprite'],
-    'heart': heart.textures['hearth.aseprite'],
-    'hud': hud.textures['Sprite-0001.'],
-    'flame': animationTextures(flame.textures, 'flame %.aseprite', 6)
+    'moonclouds': resources['moonclouds'].texture,
+    'orb': ssTextures('orb')['orb.aseprite'],
+    'heart': ssTextures('heart')['hearth.aseprite'],
+    'hud': ssTextures('hud')['Sprite-0001.'],
+    'smoke': animationTextures(ssTextures('smoke'),
+                               'smoke %.aseprite', 12),
+    'magic': animationTextures(ssTextures('magic'),
+                               'magic %.aseprite', 6),    
+    'flame': animationTextures(ssTextures('flame'),
+                               'flame %.aseprite', 6)
   };
 }
 

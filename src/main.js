@@ -21,7 +21,10 @@ export function app(element, options) {
     .add('orb', "data/orb/orb.json")
     .add('heart', "data/orb/hearth.json")
     .add('flame', "data/orb/flame.json")
+    .add('smoke', "data/orb/smoke.json")
+    .add('magic', "data/orb/magic.json")
     .add('hud', 'data/orb/Sprite-Hud-0001.json')
+    .add('moonclouds', "data/orb/moonclouds.png")
     .load((loader, resources) => {
       const textures = sprites(resources);
 
