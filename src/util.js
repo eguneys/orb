@@ -1,3 +1,5 @@
+export function noop() {};
+
 export function lazy(fn) {
   let value;
 
