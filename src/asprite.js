@@ -8,6 +8,10 @@ export function sprite(texture) {
   return new PIXI.Sprite(texture);
 }
 
+export function tsprite(texture, width, height) {
+  return new PIXI.TilingSprite(texture, width, height);
+}
+
 export function pContainer() {
   return new PIXI.ParticleContainer();
 }

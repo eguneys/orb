@@ -1,12 +1,14 @@
 import { lazy } from '../util';
-import { pContainer, dContainer, sprite, asprite } from '../asprite';
+import { pContainer, dContainer, sprite, tsprite, asprite } from '../asprite';
 import Viewport from '../viewport';
 import { vec2 } from '../vec2';
 
 export default function Debug(play, ctx) {
-  const { textures, events, config } = ctx;
+  const { canvas, textures, events, config } = ctx;
 
   const makeBg = () => sprite(textures['moonclouds']);
+
+  const makeTiledMountains = () => tsprite(textures['mountainstiled'], canvas.width, 200);
 
   const makeOrb = () => sprite(textures[Math.random() < 0.5?'heart':'orb']);
   const makeFlame = () => asprite(textures[Math.random()<0.8?'smoke':'magic'], 500);
@@ -71,6 +73,15 @@ export default function Debug(play, ctx) {
 
     let bgSprite = makeBg();
     container.addChild(bgSprite);
+
+    let tiledMountainsSprite = makeTiledMountains();
+    container.addChild(tiledMountainsSprite);
+
+    tiledMountainsSprite.scale.x = 2;
+    tiledMountainsSprite.scale.y = 2;
+
+    tiledMountainsSprite.position.y = 100;
+    
 
     for (let i = 0; i< 100; i++) {
       let orbSprite = makeOrb();

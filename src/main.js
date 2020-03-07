@@ -2,18 +2,14 @@ import * as PIXI from 'pixi.js';
 import sprites from './sprites';
 
 import Config from './config';
+import Canvas from './canvas';
 import Events from './events';
 import Play from './play';
 
 export function app(element, options) {
 
   const config = Config();
-
-
-  const app = new PIXI.Application({
-    width: 32 * config.nbTilesX,
-    height: 32 * config.nbTilesY
-  });
+  const canvas = new Canvas(element);
 
   let play;
   
@@ -25,16 +21,21 @@ export function app(element, options) {
     .add('magic', "data/orb/magic.json")
     .add('hud', 'data/orb/Sprite-Hud-0001.json')
     .add('moonclouds', "data/orb/moonclouds.png")
+    .add('mountainstiled', "data/orb/mountainstiled.png")
     .load((loader, resources) => {
+
       const textures = sprites(resources);
 
       const events = new Events();
 
       events.bindTouch();
 
+      canvas.bindResize();
+
       const ctx = {
+        canvas,
         config,
-        textures, 
+        textures,
         events
       };
 
@@ -44,17 +45,16 @@ export function app(element, options) {
 
       play.init(data);
 
-      app.stage.addChild(play.container());
+      canvas.withApp(app => {
 
-      app.ticker.add(delta => {
-        events.update(delta);
-        play.update(delta);
-        play.render();
+        app.stage.addChild(play.container());
+
+        app.ticker.add(delta => {
+          events.update(delta);
+          play.update(delta);
+          play.render();
+        });
       });
 
     });
-
-  
-  element.appendChild(app.view);
-
 }

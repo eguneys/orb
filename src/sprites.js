@@ -4,6 +4,7 @@ export default function sprites(resources) {
 
   return {
     'moonclouds': resources['moonclouds'].texture,
+    'mountainstiled': resources['mountainstiled'].texture,
     'orb': ssTextures('orb')['orb.aseprite'],
     'heart': ssTextures('heart')['hearth.aseprite'],
     'hud': ssTextures('hud')['Sprite-0001.'],
