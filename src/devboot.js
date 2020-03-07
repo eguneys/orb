@@ -1,5 +1,7 @@
-require('./index.css');
-
 const main = require('./main');
 
-module.exports = main.app;
+function boot(element) {
+  main.app(element);
+}
+
+module.exports = boot;
