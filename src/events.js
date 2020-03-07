@@ -13,6 +13,13 @@ export default function Events() {
 
     if (current) {
       current.dpos = v.csub(current.epos, current.start);
+      if (current.tapping) {
+        if (current.tapping.handled) {
+          delete current.tapping;
+        } else {
+          current.tapping.handled = true;
+        }
+      }
       if (current.ending) {
         if (current.ending.handled) {
           delete state.current;

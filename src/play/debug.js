@@ -1,12 +1,15 @@
 import { lazy } from '../util';
-import { dContainer, sprite } from '../asprite';
+import { pContainer, dContainer, sprite, asprite } from '../asprite';
 import Viewport from '../viewport';
 import { vec2 } from '../vec2';
 
 export default function Debug(play, ctx) {
   const { textures, events, config } = ctx;
 
-  let orbTexture = textures['orb.aseprite'];
+  const makeOrb = () => sprite(textures[Math.random() < 0.5?'heart':'orb']);
+  const makeFlame = () => asprite(textures['flame'], 500);
+
+  let flames = [];
 
   let viewport = new Viewport({
     vWidth: config.nbTilesX * 32,
@@ -37,20 +40,44 @@ export default function Debug(play, ctx) {
       if (events.data.current.ending) {
         viewport.commitDrag();
       }
+
+      if (events.data.current.tapping) {
+        let vpos = events.data.current.epos;
+
+        let wPos = viewport.viewToWorld(vpos);
+
+        let orbSprite = makeOrb();
+
+        addToViewport(orbSprite, wPos);
+        this.container().addChild(orbSprite);
+      }
     }
     viewport.update(delta);
+
+    flames.forEach(_ => _.update(delta));
   };
 
   this.render = () => {
   };
 
+  const addToViewport = (item, pos) => {
+    viewport.addChild(item, pos);
+  };
+
   this.container = lazy(() => {
     let container = dContainer();
     for (let i = 0; i< 100; i++) {
-      let orbSprite = sprite(orbTexture);
+      let orbSprite = makeOrb();
+      addToViewport(orbSprite, vec2(i * 32,(32 / i)*32));
       container.addChild(orbSprite);
-      viewport.addChild(orbSprite, vec2(i * 32,(32 / i)*32));
+
+      let flameSprite = makeFlame();
+      addToViewport(flameSprite, vec2(i * 32, Math.sin(i) * 32));
+      container.addChild(flameSprite);
+      flames.push(flameSprite);
+
     }
+
     return container;
   });
 

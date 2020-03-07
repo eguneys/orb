@@ -64,6 +64,8 @@ export default function Viewport(opts) {
     children.each(child => child.update(delta));
   };
 
+  this.viewToWorld = pos => viewToWorld(pos);
+
   this.visiblePosition = pos => worldToView(pos);
 
   this.visible = pos => {

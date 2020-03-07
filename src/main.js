@@ -18,7 +18,10 @@ export function app(element, options) {
   let play;
   
   PIXI.Loader.shared
-    .add('sheet', "data/orb/orb.json")
+    .add('orb', "data/orb/orb.json")
+    .add('heart', "data/orb/hearth.json")
+    .add('flame', "data/orb/flame.json")
+    .add('hud', 'data/orb/Sprite-Hud-0001.json')
     .load((loader, resources) => {
       const textures = sprites(resources);
 
