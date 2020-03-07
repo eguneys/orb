@@ -3,9 +3,9 @@ import { dContainer } from '../asprite';
 
 import Debug from './debug';
 
-export default function Play(textures) {
+export default function Play(ctx) {
 
-  let debug = new Debug(this, textures);
+  let debug = new Debug(this, ctx);
 
   this.init = data => {
     this.data = data;

@@ -44,6 +44,11 @@ export function scale(v0, s) {
   return v0;
 }
 
+export function setScale(v0, v1, s) {
+  v0[0] = v1[0] * s;
+  v0[1] = v1[1] * s;
+}
+
 export function addScale(v0, v1, s) {
   v0[0] += v1[0] * s;
   v0[1] += v1[1] * s;

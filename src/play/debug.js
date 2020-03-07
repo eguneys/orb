@@ -3,13 +3,14 @@ import { dContainer, sprite } from '../asprite';
 import Viewport from '../viewport';
 import { vec2 } from '../vec2';
 
-export default function Debug(play, textures) {
+export default function Debug(play, ctx) {
+  const { textures, events, config } = ctx;
 
   let orbTexture = textures['orb.aseprite'];
 
   let viewport = new Viewport({
-    vWidth: 20 * 32,
-    vHeight: 12 * 32,
+    vWidth: config.nbTilesX * 32,
+    vHeight: config.nbTilesY * 32,
     onOn: (item) => {
       item.visible = true;
     },
@@ -26,6 +27,13 @@ export default function Debug(play, textures) {
   };
   
   this.update = delta => {
+    if (events.data.current) {
+      let dpos = events.data.current.dpos;
+
+      if (dpos) {
+        viewport.drag(dpos, config.sensitivity);
+      }
+    }
     viewport.update(delta);
   };
 

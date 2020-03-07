@@ -47,8 +47,8 @@ export default function Viewport(opts) {
   }));
   this.removeChild = (child) => children.release(child);
 
-  this.drag = v1 => {
-    v.add(viewOrigin, v1);
+  this.drag = (v1, scale = 1) => {
+    v.addScale(viewOrigin, v1, scale);
     return this;
   };
 
