@@ -12,11 +12,7 @@ export default function Events() {
     let { current } = state;
 
     if (current) {
-      if (current.moving) {
-        current.moving = false;
-      } else {
-        delete current.dpos;
-      }
+      current.dpos = v.csub(current.epos, current.start);
       if (current.ending) {
         if (current.ending.handled) {
           delete state.current;
@@ -78,8 +74,6 @@ function moveTouch(state) {
   return function(e) {
     if (state.current) {
       const tPos = eventPosition(e);
-      state.current.moving = true;
-      state.current.dpos = v.sub(v.copy(state.current.epos), tPos);
       state.current.epos = tPos;
     }
   };

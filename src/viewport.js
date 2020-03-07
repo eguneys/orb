@@ -20,21 +20,24 @@ export default function Viewport(opts) {
 
   let { width, height, vWidth, vHeight, onOn, onOff, onView } = opts;
 
-  let viewOrigin = vec2(0);
+  let dragDelta = vec2(0);
+  let viewDelta = vec2(0);
 
   let children = new Pool(() => new ViewportChild(this));
+
+  const viewOrigin = () => v.cadd(dragDelta, viewDelta);
 
   const worldToView = worldPos => {
     let res = vec2(0);
     v.add(res, worldPos);
-    v.sub(res, viewOrigin);
+    v.sub(res, viewOrigin());
     return res;
   };
 
   const viewToWorld = viewPos => {
     let res = vec2(0);
     v.add(res, viewPos);
-    v.add(res, viewOrigin);
+    v.add(res, viewOrigin());
     return res;
   };
 
@@ -48,8 +51,13 @@ export default function Viewport(opts) {
   this.removeChild = (child) => children.release(child);
 
   this.drag = (v1, scale = 1) => {
-    v.addScale(viewOrigin, v1, scale);
+    v.setScale(dragDelta, v1, -scale);
     return this;
+  };
+
+  this.commitDrag = () => {
+    v.add(viewDelta, dragDelta);
+    v.scale(dragDelta, 0);
   };
 
   this.update = (delta) => {

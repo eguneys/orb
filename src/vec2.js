@@ -54,3 +54,11 @@ export function addScale(v0, v1, s) {
   v0[1] += v1[1] * s;
   return v0;
 }
+
+export function csub(v0, v1) {
+  return sub(copy(v0), v1);
+}
+
+export function cadd(v0, v1) {
+  return add(copy(v0), v1);
+}

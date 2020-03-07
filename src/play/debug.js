@@ -31,7 +31,11 @@ export default function Debug(play, ctx) {
       let dpos = events.data.current.dpos;
 
       if (dpos) {
-        viewport.drag(dpos, config.sensitivity);
+        viewport.drag(dpos);
+      }
+
+      if (events.data.current.ending) {
+        viewport.commitDrag();
       }
     }
     viewport.update(delta);
@@ -45,7 +49,7 @@ export default function Debug(play, ctx) {
     for (let i = 0; i< 100; i++) {
       let orbSprite = sprite(orbTexture);
       container.addChild(orbSprite);
-      viewport.addChild(orbSprite, vec2(i * 20,(32 / i)*20));
+      viewport.addChild(orbSprite, vec2(i * 32,(32 / i)*32));
     }
     return container;
   });
