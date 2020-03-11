@@ -1,3 +1,4 @@
+import { objMap } from '../util2';
 import { pContainer, dContainer, sprite, tsprite, asprite } from '../asprite';
 
 import Pool from 'poolf';
@@ -22,11 +23,14 @@ export default function Tiles(play, ctx) {
 
   let bs = boundsF();
 
-  let turtles = new Pool(() => sprite(textures['hud']));
+  let turtles = new Pool(() => sprite(textures['hud']), {
+    name: 'Turtles',
+    warnLeak: 10000
+  });
   let viewport = new Viewport({
     vWidth: bs.width,
     vHeight: bs.height,
-    getPosition: item => item.position,
+    getPosition: ({ worm }) => worm.pos,
     onOn: (item) => {
       let sp = turtles.acquire(_ => {
         _.height = 8;
@@ -60,14 +64,8 @@ export default function Tiles(play, ctx) {
     
     worms = new Worms(0, 0, bs.width, bs.height);
 
-    tiles = [{
-      position: [0, 0]
-    },{
-      position: [bs.width-8, bs.height-8]
-    }];
-
-    tiles.forEach(tile => {
-      viewport.addChild(tile);
+    objMap(worms.tiles, (key, worm) => {
+      viewport.addChild({ worm });
     });
 
     initContainer();

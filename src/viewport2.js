@@ -16,7 +16,10 @@ export default function Viewport({
   let dragDelta = vec2(0);
   let viewDelta = vec2(0);
 
-  let children = new Pool(() => new ViewportChild(this, getPosition));
+  let children = new Pool(() => new ViewportChild(this, getPosition), {
+    name: 'Viewport',
+    warnLeak: 10000
+  });
 
   const viewOrigin = () => v.cadd(dragDelta, viewDelta);
 
