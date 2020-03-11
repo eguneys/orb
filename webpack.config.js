@@ -60,7 +60,7 @@ const prodConfig = {
   output: {
     filename: 'bundle.js',
     libraryTarget: 'var',
-    library: 'Tetris',
+    library: 'Orb',
   },
   devtool: 'none',
   target: 'web',

@@ -6,8 +6,7 @@ const { vec2 } = v;
 import { noop } from './util';
 
 export default function Viewport({
-  width = 1000,
-  height = 1000,
+  getPosition,
   vWidth = 100,
   vHeight = 100,
   onOn = noop,
@@ -17,7 +16,7 @@ export default function Viewport({
   let dragDelta = vec2(0);
   let viewDelta = vec2(0);
 
-  let children = new Pool(() => new ViewportChild(this));
+  let children = new Pool(() => new ViewportChild(this, getPosition));
 
   const viewOrigin = () => v.cadd(dragDelta, viewDelta);
 
@@ -37,7 +36,6 @@ export default function Viewport({
 
   this.addChild = (item, pos) => children.acquire(_ => _.init({
     item,
-    pos,
     onOn,
     onOff,
     onView
@@ -75,24 +73,22 @@ export default function Viewport({
 
 }
 
-function ViewportChild(viewport) {
+function ViewportChild(viewport, getPosition) {
 
   let item,
-      pos,
       onOn,
       onOff,
       onView;
 
   let wasVisible;
   
-  this.updatePosition = newPos => pos = newPos;
+  const pos = () => getPosition(item);
 
-  this.visiblePosition = () => viewport.visiblePosition(pos);
+  this.visiblePosition = () => viewport.visiblePosition(pos());
 
   this.init = (opts) => {
     wasVisible = undefined;
     item = opts.item;
-    pos = opts.pos;
     onOn = opts.onOn;
     onOff = opts.onOff;
     onView = opts.onView;
@@ -113,6 +109,6 @@ function ViewportChild(viewport) {
     }
   };
 
-  const visible = () => viewport.visible(pos);
+  const visible = () => viewport.visible(pos());
 
 }
