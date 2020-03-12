@@ -1,12 +1,14 @@
 export function noop() {};
 
-export function lazy(fn) {
-  let value;
+export function makeRoundDown(multiple) {
+  return numToRound => {
+    if (multiple == 0)
+      return numToRound;
 
-  return () => {
-    if (!value) {
-      value = fn();
-    }
-    return value;
+    let remainder = numToRound % multiple;
+    if (remainder == 0)
+      return numToRound;
+
+    return numToRound - remainder;
   };
-};
+}

@@ -2,6 +2,8 @@ import Destructible from './dquad/destructible';
 
 import * as v from './vec2';;
 
+import { makeRoundDown } from './util';
+
 export default function Worms(x, y, w, h, tileSize = 8) {
 
   this.width = w;
@@ -128,16 +130,3 @@ function Worm(pos) {
 
 const pos2key = pos => pos[0] + ';' + pos[1];
 const key2pos = key => key.split(';').map(_ => parseInt(_));
-
-function makeRoundDown(multiple) {
-  return numToRound => {
-    if (multiple == 0)
-      return numToRound;
-
-    let remainder = numToRound % multiple;
-    if (remainder == 0)
-      return numToRound;
-
-    return numToRound - remainder;
-  };
-}

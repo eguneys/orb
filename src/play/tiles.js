@@ -7,7 +7,7 @@ import Pool from 'poolf';
 
 import Viewport from '../viewport2';
 import Worms from '../worms';
-
+import Cats from '../cats';
 
 export default function Tiles(play, ctx) {
   const { canvas, textures, events, config } = ctx;
@@ -59,28 +59,30 @@ export default function Tiles(play, ctx) {
         dO.visible = false;
       }
 
-      if (entity) {
+      if (entity && entity.hero) {
         let { part } = entity;
 
         dO.visible = true;
+      } else {
+
       }
 
       dO.position.x = visiblePos[0];
       dO.position.y = visiblePos[1];
     }
   });
-  let worms;
 
-  let tiles;
+  let worms;
 
   this.init = data => {
     let bs = boundsF();
-    
+
     worms = new Worms(0, 0, bs.width, bs.height);
 
     genWorms(worms);
 
     worms.addHero([10, 10]);
+    worms.moveHero([10, 10], [20, 20]);
 
     objMap(worms.tiles, (key, worm) => {
       viewport.addChild({ worm });

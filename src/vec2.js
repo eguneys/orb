@@ -55,6 +55,26 @@ export function addScale(v0, v1, s) {
   return v0;
 }
 
+export function length(v0) {
+  return Math.sqrt(v0[0] * v0[0] +
+                   v0[1] * v0[1]);
+}
+
+export function normalize(v0) {
+  scale(v0, 1/length(v0));
+  
+  return v0;
+}
+
+export function direction(v0, v1) {
+  let res = csub(v1, v0);
+  return normalize(res);
+}
+
+export function cscale(v0, s) {
+  return scale(copy(v0), s);
+}
+
 export function csub(v0, v1) {
   return sub(copy(v0), v1);
 }

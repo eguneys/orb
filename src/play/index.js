@@ -1,36 +1,36 @@
 import { dContainer } from '../asprite';
 
 import Tiles from './tiles';
-import Debug from './debug';
-import Menu from './menu';
+import Cats from './cats';
 
 export default function Play(ctx) {
 
-  let menu = new Menu(this, ctx);
-  let debug = new Debug(this, ctx);
-  let tiles = new Tiles(this, ctx);
+  let tiles = new Tiles(this, ctx),
+      cats = new Cats(this, ctx);
 
   this.init = data => {
     this.data = data;
-    debug.init({});
-    menu.init({});
     tiles.init({});
+    cats.init({});
 
     initContainer();
   };
   
   this.update = delta => {
     tiles.update(delta);
+    cats.update(delta);
   };
 
   const container = this.container = dContainer();
 
   const initContainer = () => {
+    container.addChild(cats.container);
     container.addChild(tiles.container);
   };
 
   this.render = () => {
     tiles.render();
+    cats.render();
   };
 
 }
