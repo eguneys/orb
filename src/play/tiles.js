@@ -1,6 +1,8 @@
 import { objMap } from '../util2';
 import { pContainer, dContainer, sprite, tsprite, asprite } from '../asprite';
 
+import genWorms from '../gen';
+
 import Pool from 'poolf';
 
 import Viewport from '../viewport2';
@@ -39,20 +41,32 @@ export default function Tiles(play, ctx) {
 
       container.addChild(sp);
 
-      item.sprite = sp;
+      item.dO = sp;
     },
     onOff: (item) => {
 
-      turtles.release(item.sprite);
-      container.removeChild(item.sprite);
+      turtles.release(item.dO);
+      container.removeChild(item.dO);
 
-      item.sprite = null;
+      delete item.dO;
     },
-    onView: (item, visiblePos) => {
-      let sp = item.sprite;
+    onView: ({ dO, worm }, visiblePos) => {
+      let { entity, collision: { visible } } = worm.data();
 
-      sp.position.x = visiblePos[0];
-      sp.position.y = visiblePos[1];
+      if (visible) {
+        dO.visible = true;
+      } else {
+        dO.visible = false;
+      }
+
+      if (entity) {
+        let { part } = entity;
+
+        dO.visible = true;
+      }
+
+      dO.position.x = visiblePos[0];
+      dO.position.y = visiblePos[1];
     }
   });
   let worms;
@@ -63,6 +77,10 @@ export default function Tiles(play, ctx) {
     let bs = boundsF();
     
     worms = new Worms(0, 0, bs.width, bs.height);
+
+    genWorms(worms);
+
+    worms.addHero([10, 10]);
 
     objMap(worms.tiles, (key, worm) => {
       viewport.addChild({ worm });
