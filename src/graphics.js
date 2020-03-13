@@ -29,6 +29,13 @@ export default function Graphics() {
     }
   };
 
+  this.bent = (line, amount = 0.2) => {
+    let cp1 = line.pointFrom(0.3, amount),
+        cp2 = line.pointFrom(1-0.3, amount);
+
+    this.bezier(cp1, cp2, line);
+  };
+
   this.bezier = (cp, cp2, line) => {
     let from = line.A,
         to = line.B;

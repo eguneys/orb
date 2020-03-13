@@ -21,6 +21,7 @@ export default function CatsView(play, ctx) {
 
   let bs = boundsF();
 
+  
   let tS = 4;
 
   let catsPool = new Pool(() => {
@@ -39,7 +40,8 @@ export default function CatsView(play, ctx) {
 
     cats = new Cats();
 
-    cats.cat(0, 0);
+    cats.cat(50, 50, 20, 20);
+    cats.cat(10, 10, 100, 60);
 
   };
 

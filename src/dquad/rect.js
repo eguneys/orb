@@ -15,8 +15,8 @@ export default function Rectangle(x, y, w, h) {
 
   let A = this.A = [x, y],
       B = this.B = [x, y1],
-      C = this.C = [x1, y],
-      D = this.D = [x1, y1];
+      C = this.C = [x1, y1],
+      D = this.D = [x1, y];
 
   this.AB = line(A, B);
   this.BC = line(B, C);
