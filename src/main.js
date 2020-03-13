@@ -4,6 +4,7 @@ import sprites from './sprites';
 import Config from './config';
 import Canvas from './canvas';
 import Events from './events';
+import Keyboard from './keyboard';
 import Play from './play';
 
 export function app(element, options) {
@@ -26,9 +27,12 @@ export function app(element, options) {
 
       const textures = sprites(resources);
 
+      const keyboard = new Keyboard();
+
       const events = new Events();
 
       events.bindTouch();
+      keyboard.bind();
 
       canvas.bindResize();
 
@@ -36,7 +40,8 @@ export function app(element, options) {
         canvas,
         config,
         textures,
-        events
+        events,
+        keyboard
       };
 
       const data = {};

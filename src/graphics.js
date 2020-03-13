@@ -11,6 +11,10 @@ export default function Graphics() {
 
   this.points = () => points;
 
+  this.point = point => {
+    points.push(point);
+  };
+
   this.line = line => {
     let a = line.A,
         b = line.B,
@@ -57,7 +61,7 @@ export default function Graphics() {
         t2 = 0,
         t3 = 0;
 
-    points.push(v.copy(from));
+    points.push([Math.round(from[0]), Math.round(from[1])]);
 
     for (let i = 1, j = 0; i <= n; i++) {
       j = i / n;

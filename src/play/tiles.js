@@ -10,7 +10,7 @@ import Worms from '../worms';
 import Cats from '../cats';
 
 export default function Tiles(play, ctx) {
-  const { canvas, textures, events, config } = ctx;
+  const { canvas, textures, events, keyboard, config } = ctx;
 
   let boundsF = canvas.responsiveBounds(({ width, height }) => {
     return {
@@ -27,7 +27,7 @@ export default function Tiles(play, ctx) {
 
   let turtles = new Pool(() => sprite(textures['hud']), {
     name: 'Turtles',
-    warnLeak: 10000
+    warnLeak: 20000
   });
   let viewport = new Viewport({
     vWidth: bs.width,

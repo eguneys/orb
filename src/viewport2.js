@@ -18,7 +18,7 @@ export default function Viewport({
 
   let children = new Pool(() => new ViewportChild(this, getPosition), {
     name: 'Viewport',
-    warnLeak: 10000
+    warnLeak: 20000
   });
 
   const viewOrigin = () => v.cadd(dragDelta, viewDelta);
@@ -69,6 +69,7 @@ export default function Viewport({
 
     if (vPos[0] < 0 || vPos[1] < 0 ||
         vPos[0] > vWidth || vPos[1] > vHeight) {
+      console.log('here');
       return false;
     }
     return true;

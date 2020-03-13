@@ -24,6 +24,7 @@ export default function Cats() {
 }
 
 function Cat(x, y, w, h) {
+
   let g = new Graphics();
 
   this.points = g.points;
@@ -32,13 +33,14 @@ function Cat(x, y, w, h) {
 
   let tick = Math.random() * 100;
 
+  this.fillPoints = () => {
+    
+  };
+
   this.update = delta => {
     tick += delta * 0.01;
 
     g.clear();
-
-    // g.line(r.AB.scale(0.9));
-    // g.line(r.CD);
 
     let rounds = 0.94;
 
@@ -50,12 +52,12 @@ function Cat(x, y, w, h) {
     let wave = Math.sin(tick * 10) * 0.05;
 
     g.bent(line(ab.A, bc.B), 0.2);
-    g.bent(line(bc.A, cd.B), 0.2);
-    g.bent(line(cd.A, da.B), 0.2);
-    g.bent(line(da.A, ab.B), 0.2);
     g.bent(ab, wave);
     g.bent(bc, wave);
+    g.bent(line(bc.A, cd.B), 0.2);
     g.bent(cd, wave);
+    g.bent(line(cd.A, da.B), 0.2);
+    g.bent(line(da.A, ab.B), 0.2);
     g.bent(da, wave);
 
   };

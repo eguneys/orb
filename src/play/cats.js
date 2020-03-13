@@ -1,4 +1,4 @@
-import { pContainer, dContainer, sprite, tsprite, asprite } from '../asprite';
+import { pContainer, dContainer, sprite, tsprite, asprite, graphics } from '../asprite';
 
 import Pool from 'poolf';
 
@@ -41,8 +41,9 @@ export default function CatsView(play, ctx) {
     cats = new Cats();
 
     cats.cat(50, 50, 20, 20);
-    cats.cat(10, 10, 100, 60);
+    // cats.cat(10, 10, 10, 10);
 
+    initContainer();
   };
 
   const container = this.container = dContainer();
@@ -70,7 +71,6 @@ export default function CatsView(play, ctx) {
           container.addChild(_);
         });
       });
-      
     });
 
   };

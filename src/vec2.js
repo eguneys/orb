@@ -6,6 +6,11 @@ export function copy(v1) {
   return [v1[0], v1[1]];
 }
 
+export function equal(v0, v1) {
+  return v0[0] === v1[0] &&
+    v0[1] === v1[1];
+}
+
 export function makeAttribute(v) {
   return (a = v[0], b = v[1]) => {
     v[0] = a;

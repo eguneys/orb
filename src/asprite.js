@@ -1,5 +1,9 @@
 import * as PIXI from 'pixi.js';
 
+export function graphics() {
+  return new PIXI.Graphics();
+}
+
 export function dContainer() {
   return new PIXI.Container();
 }
