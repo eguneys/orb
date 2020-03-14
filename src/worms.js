@@ -8,6 +8,7 @@ export default function Worms(x, y, w, h, tileSize = 8) {
 
   this.width = w;
   this.height = h;
+  this.tileSize = tileSize;
 
   const roundToTile = makeRoundDown(tileSize);
 
@@ -52,7 +53,9 @@ export default function Worms(x, y, w, h, tileSize = 8) {
     syncBody();
   };
 
-  const heroPos = pos => {
+  this.getPos = pos => tiles[pos2key(pos)].data();
+
+  const heroPos = this.heroPos = pos => {
     let posHead = [roundToTile(pos[0]), roundToTile(pos[1])],
         posTorso = v.add(v.copy(posHead), [0, tileSize]),
         posArms1 = v.add(v.copy(posHead), [tileSize, tileSize]),

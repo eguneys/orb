@@ -2,14 +2,26 @@ export function vec2(a = 0, b = a) {
   return [a, b];
 }
 
-export function copy(v1) {
-  return [v1[0], v1[1]];
+export function copy(v1, v2 = []) {
+  v2[0] = v1[0];
+  v2[1] = v1[1];
+  return v2;
 }
 
 export function equal(v0, v1) {
   return v0[0] === v1[0] &&
     v0[1] === v1[1];
 }
+
+export function makeMap(f) {
+  return v0 => {
+    v0[0] = f(v0[0]);
+    v0[1] = f(v0[1]);
+    return v0;
+  };
+};
+
+export const round = makeMap(_ => Math.round(_));
 
 export function makeAttribute(v) {
   return (a = v[0], b = v[1]) => {
@@ -19,9 +31,15 @@ export function makeAttribute(v) {
   };
 }
 
-export function add(v0, v1) {
+export function add(v0, v1, ...vs) {
   v0[0] += v1[0];
   v0[1] += v1[1];
+
+  vs.forEach(_ => {
+    v0[0] += _[0];
+    v0[1] += _[1];
+  });
+
   return v0;
 }
 

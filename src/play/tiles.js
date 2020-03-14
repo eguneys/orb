@@ -9,6 +9,8 @@ import Viewport from '../viewport2';
 import Worms from '../worms';
 import Cats from '../cats';
 
+import Hero from './hero';
+
 export default function Tiles(play, ctx) {
   const { canvas, textures, events, keyboard, config } = ctx;
 
@@ -72,17 +74,16 @@ export default function Tiles(play, ctx) {
     }
   });
 
-  let worms;
+  let worms = new Worms(0, 0, bs.width, bs.height);
+
+  let hero = new Hero(play, ctx, worms);
 
   this.init = data => {
     let bs = boundsF();
 
-    worms = new Worms(0, 0, bs.width, bs.height);
-
     genWorms(worms);
 
-    worms.addHero([10, 10]);
-    worms.moveHero([10, 10], [20, 20]);
+    hero.init({});
 
     objMap(worms.tiles, (key, worm) => {
       viewport.addChild({ worm });
@@ -99,14 +100,28 @@ export default function Tiles(play, ctx) {
     container.removeChildren();
   };
 
+  const maybeMove = delta => {
+    const { left, right, up, down } = keyboard.data;
+
+    if (left) {
+      hero.move([-1, 0]);
+    } else if (right) {
+      hero.move([1, 0]);
+    }
+
+  };
   
   this.update = delta => {
 
+    maybeMove(delta);
+
+    hero.update(delta);
     viewport.update(delta);
 
   };
 
   this.render = () => {
+    hero.render();
   };
 
 }
