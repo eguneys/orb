@@ -54,42 +54,61 @@ export default function Worms(x, y, w, h) {
 
   this.getPos = pos => tiles[pos2key(pos)].data();
 
+  this.visible = pos => {
+    let { collision: { visible } } = this.getPos(pos);
+    return visible;
+  };
+
   const heroPos = this.heroPos = pos => {
     let tileSize = 1;
     let posHead = [roundToTile(pos[0]), roundToTile(pos[1])],
-        posTorso = v.add(v.copy(posHead), [0, tileSize]),
-        posArms1 = v.add(v.copy(posHead), [tileSize, tileSize]),
-        posArms2 = v.add(v.copy(posHead), [-tileSize, tileSize]),
-        posLegs = v.add(v.copy(posHead), [0, 2 * tileSize]);
+        posHeadLeft = v.cadd(posHead, [-1, 0]),
+        posHeadRight = v.cadd(posHead, [1, 0]),
+        posHeadRightUp = v.cadd(posHead, [1, -1]),
+        posHeadLeftUp = v.cadd(posHead, [-1, -1]),
+        posTorso = v.cadd(posHead, [0, tileSize]),
+        posArms1 = v.cadd(posHead, [tileSize, tileSize]),
+        posArms2 = v.cadd(posHead, [-tileSize, tileSize]),
+        posLegs = v.cadd(posHead, [0, 2 * tileSize]),
+        posFall = v.cadd(posHead, [0, 3 * tileSize]),
+        posLegsLeft = v.cadd(posHead, [-1, 2 * tileSize]),
+        posLegsRight = v.cadd(posHead, [1, 2 * tileSize]);
 
     return {
       head: posHead,
+      left: posHeadLeft,
+      right: posHeadRight,
+      leftUp: posHeadLeftUp,
+      rightUp: posHeadRightUp,
       torso: posTorso,
-      arms1: posArms1,
-      arms2: posArms2,
-      legs: posLegs
+      armsRight: posArms1,
+      armsLeft: posArms2,
+      legs: posLegs,
+      fall: posFall,
+      legsLeft: posLegsLeft,
+      legsRight: posLegsRight
     };
   };
 
   this.addHero = (pos) => {
 
-    let { head, torso, arms1, arms2, legs } = heroPos(pos);
+    let { head, torso, armsLeft, armsRight, legs } = heroPos(pos);
 
     syncEntity(tiles[pos2key(head)], entityHero('head'));
     syncEntity(tiles[pos2key(torso)], entityHero('torso'));
-    syncEntity(tiles[pos2key(arms1)], entityHero('arms1'));
-    syncEntity(tiles[pos2key(arms2)], entityHero('arms2'));
+    syncEntity(tiles[pos2key(armsLeft)], entityHero('armsLeft'));
+    syncEntity(tiles[pos2key(armsRight)], entityHero('armsRight'));
     syncEntity(tiles[pos2key(legs)], entityHero('legs'));
 
   };
 
   this.removeHero = (pos) => {
-    let { head, torso, arms1, arms2, legs } = heroPos(pos);
+    let { head, torso, armsLeft, armsRight, legs } = heroPos(pos);
 
     syncEntity(tiles[pos2key(head)], entityEmpty);
     syncEntity(tiles[pos2key(torso)], entityEmpty);
-    syncEntity(tiles[pos2key(arms1)], entityEmpty);
-    syncEntity(tiles[pos2key(arms2)], entityEmpty);
+    syncEntity(tiles[pos2key(armsLeft)], entityEmpty);
+    syncEntity(tiles[pos2key(armsRight)], entityEmpty);
     syncEntity(tiles[pos2key(legs)], entityEmpty);
   };
 

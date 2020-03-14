@@ -110,9 +110,9 @@ export default function Tiles(play, ctx) {
     const { left, right, up, down } = keyboard.data;
 
     if (left) {
-      hero.move([-1, 0]);
+      hero.move('left');
     } else if (right) {
-      hero.move([1, 0]);
+      hero.move('right');
     }
 
   };

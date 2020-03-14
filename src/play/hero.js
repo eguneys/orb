@@ -25,7 +25,42 @@ export default function Hero(play, ctx, worms) {
   };
 
   const maybeFall = delta => {
-    
+    let { fall, torso } = worms.heroPos(lastPos);
+
+    let visible = worms.visible(fall);
+
+    if (!visible) {
+      moveHero(torso);
+    }
+
+  };
+
+  this.move = dir => {
+    let { armsLeft, armsRight, 
+          legsLeft, legsRight,
+          left, right,
+          leftUp, rightUp } = worms.heroPos(lastPos);
+    if (dir === 'left') {
+      let visible = worms.visible(legsLeft);
+      if (!visible) {
+        moveHero(left);
+      } else {
+        visible = worms.visible(armsLeft);
+        if (!visible) {
+          moveHero(leftUp);
+        }
+      }
+    } else {
+      let visible = worms.visible(legsRight);
+      if (!visible) {
+        moveHero(right);
+      } else {
+        visible = worms.visible(armsRight);
+        if (!visible) {
+          moveHero(rightUp);
+        }        
+      }
+    }
   };
 
   this.update = delta => {
