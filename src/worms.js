@@ -4,18 +4,17 @@ import * as v from './vec2';;
 
 import { makeRoundDown } from './util';
 
-export default function Worms(x, y, w, h, tileSize = 8) {
+export default function Worms(x, y, w, h) {
 
   this.width = w;
   this.height = h;
-  this.tileSize = tileSize;
 
-  const roundToTile = makeRoundDown(tileSize);
+  const roundToTile = makeRoundDown(1);
 
   const allPos = (() => {
     let res = [];
-    for (let i = x; i < w; i += tileSize) {
-      for (let j = y; j < h; j += tileSize) {
+    for (let i = x; i < w; i++) {
+      for (let j = y; j < h; j++) {
         res.push([i, j]);
       }
     }
@@ -56,6 +55,7 @@ export default function Worms(x, y, w, h, tileSize = 8) {
   this.getPos = pos => tiles[pos2key(pos)].data();
 
   const heroPos = this.heroPos = pos => {
+    let tileSize = 1;
     let posHead = [roundToTile(pos[0]), roundToTile(pos[1])],
         posTorso = v.add(v.copy(posHead), [0, tileSize]),
         posArms1 = v.add(v.copy(posHead), [tileSize, tileSize]),
@@ -106,11 +106,10 @@ export default function Worms(x, y, w, h, tileSize = 8) {
 
   const syncBody = () => {
     body.traverse((data, rect) => {
-      for (let i = rect.x; i < rect.x1; i += tileSize) {
-        for (let j = rect.y; j < rect.y1; j += tileSize) {
+      for (let i = rect.x; i < rect.x1; i++) {
+        for (let j = rect.y; j < rect.y1; j++) {
           let pos = [roundToTile(i), roundToTile(j)];
           let key = pos2key(pos);
-
           syncCollision(tiles[key], data);
         }
       }

@@ -7,10 +7,11 @@ export default function Hero(play, ctx, worms) {
 
   const { width, height, tileSize } = worms;
 
-  let lastPos = [tileSize, tileSize];
+  let lastPos;
+
 
   this.init = data => {
-
+    lastPos = [1, 1];
     worms.addHero(lastPos);
 
   };

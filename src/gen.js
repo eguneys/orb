@@ -9,9 +9,9 @@ export default function genWorms(worms) {
 
   worms.hideRect(rect(0, 0, width, sky));
 
-  for (let i = 0; i < width; i += 8) {
-    let y = mu.usin(i / 32) * 64;
+  for (let i = 0; i < width; i ++) {
+    let y = mu.usin(i / 8) * 8;
 
-    worms.hideRect(rect(i, sky, 8, y));
+    worms.hideRect(rect(i, sky, 1, y));
   }
 }

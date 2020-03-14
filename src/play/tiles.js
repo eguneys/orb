@@ -1,6 +1,8 @@
 import { objMap } from '../util2';
 import { pContainer, dContainer, sprite, tsprite, asprite } from '../asprite';
 
+import * as v from '../vec2';
+
 import genWorms from '../gen';
 
 import Pool from 'poolf';
@@ -27,6 +29,8 @@ export default function Tiles(play, ctx) {
 
   let bs = boundsF();
 
+  let tileSize = 8;
+
   let turtles = new Pool(() => sprite(textures['hud']), {
     name: 'Turtles',
     warnLeak: 20000
@@ -34,11 +38,13 @@ export default function Tiles(play, ctx) {
   let viewport = new Viewport({
     vWidth: bs.width,
     vHeight: bs.height,
-    getPosition: ({ worm }) => worm.pos,
+    getPosition: ({ worm }) => {
+      return v.cscale(worm.pos, tileSize);
+    },
     onOn: (item) => {
       let sp = turtles.acquire(_ => {
-        _.height = 8;
-        _.width = 8;
+        _.height = tileSize;
+        _.width = tileSize;
       });
 
       container.addChild(sp);
@@ -74,7 +80,7 @@ export default function Tiles(play, ctx) {
     }
   });
 
-  let worms = new Worms(0, 0, bs.width, bs.height);
+  let worms = new Worms(0, 0, bs.width / tileSize, bs.height / tileSize);
 
   let hero = new Hero(play, ctx, worms);
 
@@ -116,6 +122,7 @@ export default function Tiles(play, ctx) {
     maybeMove(delta);
 
     hero.update(delta);
+
     viewport.update(delta);
 
   };
