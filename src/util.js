@@ -12,3 +12,14 @@ export function makeRoundDown(multiple) {
     return numToRound - remainder;
   };
 }
+
+export function throttle(fn, delay = 50) {
+  let called = false;
+  return (...args) => {
+    if (!called) {
+      called = true;
+      fn(...args);
+      setTimeout(() => called = false, delay);
+    }
+  };
+};

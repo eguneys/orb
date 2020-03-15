@@ -23,10 +23,6 @@ export default function Tiles(play, ctx) {
     };
   });
 
-  canvas.addResizeListener(() => {
-    initContainer();
-  });
-
   let bs = boundsF();
 
   let tileSize = 8;
@@ -94,27 +90,16 @@ export default function Tiles(play, ctx) {
     objMap(worms.tiles, (key, worm) => {
       viewport.addChild({ worm });
     });
+  };
 
-    initContainer();
+  const initContainer = () => {
   };
 
   const container = this.container = dContainer();
-
-  const initContainer = () => {
-    const bs = boundsF();
-
-    container.removeChildren();
-  };
+  initContainer();
 
   const maybeMove = delta => {
-    const { left, right, up, down } = keyboard.data;
-
-    if (left) {
-      hero.move('left');
-    } else if (right) {
-      hero.move('right');
-    }
-
+    hero.move(keyboard.data);
   };
 
   const maybeCenterViewport = delta => {

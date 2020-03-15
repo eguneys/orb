@@ -1,22 +1,23 @@
 import * as v from '../vec2';
-import Phy from '../phy';
+import PrincePhysics from '../princephysics';
 
-import { makeRoundDown } from '../util';
+import { throttle, makeRoundDown } from '../util';
 
 export default function Hero(play, ctx, worms) {
 
-  const { width, height, tileSize } = worms;
+  const { width, height } = worms;
 
   let lastPos;
 
+  let phy = new PrincePhysics(detectCollision);
 
   this.init = data => {
     lastPos = [1, 1];
     worms.addHero(lastPos);
-
+    phy.pos(lastPos[0], lastPos[1]);
   };
 
-  const roundDown = makeRoundDown(tileSize);
+  const roundDown = makeRoundDown(1);
   const tiled = v.makeMap(_ => roundDown(_));
 
   const moveHero = newPos => {
@@ -26,49 +27,28 @@ export default function Hero(play, ctx, worms) {
 
   const pos = this.pos = () => worms.heroPos(lastPos);
 
-  const maybeFall = delta => {
-    let { fall, torso } = pos();
+  this.move = throttle(({ up, left, right, down }) => {
 
-    let visible = worms.visible(fall);
+    phy.jump(up);
+    phy.left(left);
+    phy.right(right);
 
-    if (!visible) {
-      moveHero(torso);
-    }
+  }, 50);
 
-  };
+  function detectCollision(pos) {
+    let { legs } = worms.heroPos(pos);
 
-  this.move = dir => {
-    let { armsLeft, armsRight, 
-          legsLeft, legsRight,
-          left, right,
-          leftUp, rightUp } = pos();
-    if (dir === 'left') {
-      let visible = worms.visible(legsLeft);
-      if (!visible) {
-        moveHero(left);
-      } else {
-        visible = worms.visible(armsLeft);
-        if (!visible) {
-          moveHero(leftUp);
-        }
-      }
-    } else {
-      let visible = worms.visible(legsRight);
-      if (!visible) {
-        moveHero(right);
-      } else {
-        visible = worms.visible(armsRight);
-        if (!visible) {
-          moveHero(rightUp);
-        }        
-      }
-    }
+    const { collision: { visible } } = worms.getPos(legs);
+
+    return !visible;
   };
 
   this.update = delta => {
 
-    maybeFall(delta);
-    
+    let newPos = tiled(phy.cpos());
+    moveHero(newPos);
+
+    phy.update(delta);
   };
 
   this.render = () => {
