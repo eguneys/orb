@@ -7,9 +7,9 @@ export default function genWorms(worms) {
 
   let sky = height * 0.8;
 
-  worms.hideRect(rect(0, 0, width, sky));
+  worms.hideRect(rect(2, 0, width, sky));
 
-  for (let i = 0; i < width; i ++) {
+  for (let i = 2; i < width; i++) {
     let y = mu.usin(i / 8) * 8;
 
     worms.hideRect(rect(i, sky, 1, y));

@@ -5,6 +5,8 @@ const { vec2 } = v;
 
 import { noop } from './util';
 
+import ipol from './ipol';
+
 export default function Viewport({
   getPosition,
   vWidth = 100,
@@ -13,8 +15,16 @@ export default function Viewport({
   onOff = noop,
   onView = noop}) {
 
+  let vBounds = vec2(vWidth, vHeight),
+      vHalfBounds = v.cscale(vBounds, 0.5),
+      vFollowBounds = v.cscale(vBounds, 0.5);
+
+  let followSpeed = 0.04;
+
   let dragDelta = vec2(0);
   let viewDelta = vec2(0);
+
+  let iFollow = new ipol(0);
 
   let children = new Pool(() => new ViewportChild(this, getPosition), {
     name: 'Viewport',
@@ -46,17 +56,71 @@ export default function Viewport({
   this.removeChild = (child) => children.release(child);
   this.removeChildren = () => children.releaseAll();
 
-  this.drag = (v1, scale = 1) => {
-    v.setScale(dragDelta, v1, -scale);
-    return this;
+  // this.drag = (v1, scale = 1) => {
+  //   v.setScale(dragDelta, v1, -scale);
+  //   return this;
+  // };
+
+  // this.commitDrag = () => {
+  //   v.add(viewDelta, dragDelta);
+  //   v.scale(dragDelta, 0);
+  // };
+
+  const viewFrame = () => {
+    let [x, y] = viewDelta;
+    let [w, h] = vBounds;
+
+    return [x, y, w, h];
+  };
+  
+  const followFrame = () => {
+    let [viewX, viewY] = viewDelta;
+    let [halfW, halfH] = vHalfBounds;
+    let [followW, followH] = vFollowBounds;
+    let halfFollowW = followW / 2,
+        halfFollowH = followH / 2,
+        viewHalfX = viewX + halfW,
+        viewHalfY = viewY + halfH,
+        followX = viewHalfX - halfFollowW,
+        followY = viewHalfY - halfFollowH;
+
+    return [followX, followY, followW, followH];
   };
 
-  this.commitDrag = () => {
-    v.add(viewDelta, dragDelta);
-    v.scale(dragDelta, 0);
+  const frameContainsPoint = ([x, y, w, h], [pX, pY]) => {
+    return x < pX && y < pY && 
+      x + w > pX && y + h > pY;
+  };
+
+  let followPos;
+
+  this.follow = (pos) => {
+    let ff = followFrame();
+    if (!frameContainsPoint(ff, pos)) {
+      // this.center(pos);
+      iFollow.both(0, 1);
+      followPos = pos;
+    }
+  };
+
+  this.center = (pos) => {
+    pos = v.csub(pos, vHalfBounds);
+    v.copy(pos, viewDelta);
+  };
+
+  const iCenter = () => {
+    let targetPos = v.csub(followPos, vHalfBounds);
+    let sourcePos = viewDelta;
+
+    let diff = v.csub(targetPos, sourcePos);
+
+    v.scale(diff, iFollow.value());
+    v.add(viewDelta, diff);
   };
 
   this.update = (delta) => {
+    iFollow.update(delta * followSpeed);
+    iCenter();
     children.each(child => child.update(delta));
   };
 

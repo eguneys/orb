@@ -24,8 +24,10 @@ export default function Hero(play, ctx, worms) {
     v.copy(newPos, lastPos);
   };
 
+  const pos = this.pos = () => worms.heroPos(lastPos);
+
   const maybeFall = delta => {
-    let { fall, torso } = worms.heroPos(lastPos);
+    let { fall, torso } = pos();
 
     let visible = worms.visible(fall);
 
@@ -39,7 +41,7 @@ export default function Hero(play, ctx, worms) {
     let { armsLeft, armsRight, 
           legsLeft, legsRight,
           left, right,
-          leftUp, rightUp } = worms.heroPos(lastPos);
+          leftUp, rightUp } = pos();
     if (dir === 'left') {
       let visible = worms.visible(legsLeft);
       if (!visible) {
