@@ -80,7 +80,7 @@ export default function Tiles(play, ctx) {
     }
   });
 
-  let worms = new Worms(0, 0, bs.width / tileSize, bs.height / tileSize);
+  let worms = new Worms(0, 0, bs.width / (tileSize / 2), bs.height / tileSize);
 
   let hero = new Hero(play, ctx, worms);
 
@@ -116,15 +116,22 @@ export default function Tiles(play, ctx) {
     }
 
   };
+
+  const maybeCenterViewport = delta => {
+    const { head } = hero.pos();
+    
+    viewport.follow(v.scale(head, tileSize));
+
+  };
   
   this.update = delta => {
 
     maybeMove(delta);
+    maybeCenterViewport(delta);
 
     hero.update(delta);
 
     viewport.update(delta);
-
   };
 
   this.render = () => {
