@@ -12,6 +12,7 @@ import Worms from '../worms';
 import Cats from '../cats';
 
 import Hero from './hero';
+import Smoke from './smoke';
 
 export default function Tiles(play, ctx) {
   const { canvas, textures, events, keyboard, config } = ctx;
@@ -19,15 +20,17 @@ export default function Tiles(play, ctx) {
   let boundsF = canvas.responsiveBounds(({ width, height }) => {
     return {
       width,
-      height
+      height,
+      tileSize: 8,
+      smallTileSize: 4
     };
   });
 
   let bs = boundsF();
 
-  let tileSize = 8;
+  let visibleHeroPos;
 
-  let turtles = new Pool(() => sprite(textures['hud']), {
+  let turtles = new Pool(() => sprite(textures['orb']), {
     name: 'Turtles',
     warnLeak: 20000
   });
@@ -35,12 +38,12 @@ export default function Tiles(play, ctx) {
     vWidth: bs.width,
     vHeight: bs.height,
     getPosition: ({ worm }) => {
-      return v.cscale(worm.pos, tileSize);
+      return v.cscale(worm.pos, bs.tileSize);
     },
     onOn: (item) => {
       let sp = turtles.acquire(_ => {
-        _.height = tileSize;
-        _.width = tileSize;
+        _.height = bs.tileSize;
+        _.width = bs.tileSize;
       });
 
       container.addChild(sp);
@@ -67,6 +70,8 @@ export default function Tiles(play, ctx) {
         let { part } = entity;
 
         dO.visible = true;
+
+        visibleHeroPos = visiblePos;
       } else {
 
       }
@@ -76,7 +81,7 @@ export default function Tiles(play, ctx) {
     }
   });
 
-  let worms = new Worms(0, 0, bs.width / (tileSize / 2), bs.height / tileSize);
+  let worms = new Worms(0, 0, bs.width / (bs.tileSize / 2), bs.height / bs.tileSize);
 
   let hero = new Hero(play, ctx, worms);
 
@@ -92,6 +97,12 @@ export default function Tiles(play, ctx) {
     });
   };
 
+  this.visibles = () => {
+    return {
+      hero: visibleHeroPos
+    };
+  };
+
   const initContainer = () => {
   };
 
@@ -105,7 +116,7 @@ export default function Tiles(play, ctx) {
   const maybeCenterViewport = delta => {
     const { head } = hero.pos();
     
-    viewport.follow(v.scale(head, tileSize));
+    viewport.follow(v.scale(head, bs.tileSize));
 
   };
   

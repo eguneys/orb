@@ -7,6 +7,8 @@ import Events from './events';
 import Keyboard from './keyboard';
 import Play from './play';
 
+import Stats from 'stats.js';
+
 export function app(element, options) {
 
   const config = Config();
@@ -50,14 +52,19 @@ export function app(element, options) {
 
       play.init(data);
 
+      let stats = new Stats();
+      document.body.appendChild(stats.dom);
+
       canvas.withApp(app => {
 
         app.stage.addChild(play.container);
 
         app.ticker.add(delta => {
+          stats.begin();
           events.update(delta);
           play.update(delta);
           play.render();
+          stats.end();
         });
       });
 

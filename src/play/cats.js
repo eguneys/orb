@@ -2,7 +2,7 @@ import { pContainer, dContainer, sprite, tsprite, asprite, graphics } from '../a
 
 import Pool from 'poolf';
 
-import Cats from '../cats';
+import { Light } from '../cats';
 
 export default function CatsView(play, ctx) {
 
@@ -21,60 +21,91 @@ export default function CatsView(play, ctx) {
 
   let bs = boundsF();
 
-  
   let tS = 4;
 
-  let catsPool = new Pool(() => {
-    let res = sprite(textures['hud']);
-    res.width = tS;
-    res.height = tS;
-    return res;
-  }, {
+  let catsPool = new Pool(() => new Cat(this, ctx, tS), {
     name: 'Cats',
-    warnLeak: 1000
+    warnLeak: 10000
   });
 
-  let cats;
+  let heroLight = new Light();
 
   this.init = data => {
 
-    cats = new Cats();
+    heroLight.init({ radius: 6 }); 
 
-    cats.cat(50, 50, 20, 20);
-    // cats.cat(10, 10, 10, 10);
-
-    initContainer();
   };
-
-  const container = this.container = dContainer();
 
   const initContainer = () => {
     const bs = boundsF();
-
-    container.removeChildren();
   };
+
+  const container = this.container = dContainer();
+  initContainer();
   
   this.update = delta => {
 
-    catsPool.each(_ => container.removeChild(_));
+    heroLight.update(delta);
+
+    let { hero: heroVPos } = play.visibles();
+
+    heroLight.move(heroVPos[0] / tS, heroVPos[1] / tS);
+
+    catsPool.each(_ => container.removeChild(_.container));
     catsPool.releaseAll();
 
-    cats.update(delta);
-
-    cats.cats.forEach(cat => {
-
-      let points = cat.points();
-
-      points.forEach(([x, y]) => {
-        catsPool.acquire(_ => {
-          _.position.set(x * tS, y * tS);
-          container.addChild(_);
-        });
-      });
-    });
-
+    heroLight.bigPoints.each(addCats);
+    heroLight.smallPoints.each(addCats);
   };
 
+  const addCats = ({ x, y, color }) => {
+    let cat = catsPool.acquire(_ => _.init({ x, y, color }));
+    container.addChild(cat.container);
+  };
+
+
+  this.render = () => {
+  };
+
+}
+
+function Cat(play, ctx, tS) {
+
+  const { textures } = ctx;
+
+  let d;
+
+  let x, y;
+  let color;
+
+  this.init = data => {
+    x = data.x;
+    y = data.y;
+    color = data.color;
+
+    d.position.set(x * tS, y * tS);
+
+    if (color === 'small') {
+      d.texture = textures['white'];
+    } else {
+      d.texture = textures['yellow'];
+    }
+
+  };
+  
+  this.update = delta => {
+  };
+
+  let container = this.container = dContainer();
+
+  const initContainer = () => {
+    d = sprite(textures['hud']);
+    d.width = tS;
+    d.height = tS;
+    container.addChild(d);
+  };
+
+  initContainer();
 
   this.render = () => {
   };

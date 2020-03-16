@@ -19,7 +19,7 @@ export default function Viewport({
       vHalfBounds = v.cscale(vBounds, 0.5),
       vFollowBounds = v.cscale(vBounds, 0.5);
 
-  let followSpeed = 0.04;
+  let followSpeed = 0.03;
 
   let dragDelta = vec2(0);
   let viewDelta = vec2(0);

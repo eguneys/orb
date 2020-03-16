@@ -12,9 +12,9 @@ export default function Board(play, ctx) {
     this.data = data;
     tiles.init({});
     cats.init({});
-
-    initContainer();
   };
+
+  this.visibles = tiles.visibles;
   
   this.update = delta => {
     tiles.update(delta);
@@ -22,11 +22,13 @@ export default function Board(play, ctx) {
   };
 
   const container = this.container = dContainer();
-
+  
   const initContainer = () => {
     container.addChild(cats.container);
     container.addChild(tiles.container);
   };
+
+  initContainer();
 
   this.render = () => {
     tiles.render();

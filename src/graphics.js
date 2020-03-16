@@ -15,6 +15,24 @@ export default function Graphics() {
     points.push(point);
   };
 
+  this.fillCircle = (circle, uTime) => {
+    let xm = circle.x,
+        ym = circle.y,
+        r = circle.radius;
+
+    let x = -r, y = 0, err = 2 - 2 * r;
+
+    do {
+      let i = Math.sin(x + uTime);
+
+      this.line(line([i + xm-x, ym-y], [xm+x, ym-y]));
+      this.line(line([i + xm-x, ym+y], [xm+x, ym+y]));
+      r = err;
+      if (r <= y) err += ++y*2 + 1;
+      if (r > x || err > y) err += ++x*2 + 1;
+    } while (x < 0);
+  };
+
   this.line = line => {
     let a = line.A,
         b = line.B,

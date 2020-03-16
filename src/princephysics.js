@@ -10,12 +10,14 @@ export default function PrincePhysics(detectCollision) {
 
   let vFall = [0, 1],
       vJump = [0, -2],
+      vClimb = [0, -1],
       vLeft = [-1, 0],
       vRight = [1, 0];
 
   let vSs = {
     vFall,
     vJump,
+    vClimb,
     vLeft,
     vRight
   };

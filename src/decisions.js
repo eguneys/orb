@@ -5,7 +5,7 @@ const moveDirection = (physics, vMove) => {
   return physics.tryMove(movePos);
 };
 
-export function WalkDecision(physics, sDirection, { vLeft, vRight }) {
+export function WalkDecision(physics, sDirection, { vLeft, vRight, vClimb }) {
 
   let frame;
 
@@ -16,7 +16,7 @@ export function WalkDecision(physics, sDirection, { vLeft, vRight }) {
   };
 
   this.update = delta => {
-    if (frame === 0) {
+    if (frame < 2) {
       walk0();
     } else {
       endWalk();
@@ -26,13 +26,26 @@ export function WalkDecision(physics, sDirection, { vLeft, vRight }) {
   const walk0 = () => {
     if (moveDirection(physics, vWalk)) {
     } else {
-      stand();
+      climb();
     }
-    frame = 1;
+    frame++;
   };
 
   const endWalk = () => {
     stand();
+  };
+
+  const climb = () => {
+    if (moveDirection(physics, vClimb)) {
+      if (moveDirection(physics, vWalk)) {
+        
+      } else {
+        stand();
+      }
+    } else {
+      stand();
+    }
+    frame++;
   };
 
   const dash = () => {
@@ -108,9 +121,9 @@ export function DashDecision(physics, sDirection,
       dash1();
     } else if (frame === 3 || frame === 4) {
       dash2();
-    } else if (frame === 5) {
-      dash3();
-    } else if (frame === 6) {
+    } else if (frame < 8) {
+      dashGlide();
+    } else if (frame === 8) {
       dashFall();
     } else {
       endDash();
@@ -147,7 +160,7 @@ export function DashDecision(physics, sDirection,
     frame++;
   };
 
-  const dash3 = () => {
+  const dashGlide = () => {
     if (moveDirection(physics, vDash)) {
     } else {
       endDash();
