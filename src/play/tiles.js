@@ -30,7 +30,7 @@ export default function Tiles(play, ctx) {
 
   let visibleHeroPos;
 
-  let turtles = new Pool(() => sprite(textures['orb']), {
+  let turtles = new Pool(() => sprite(textures['white']), {
     name: 'Turtles',
     warnLeak: 20000
   });
@@ -47,6 +47,12 @@ export default function Tiles(play, ctx) {
       });
 
       container.addChild(sp);
+
+      let { worm: { entity } } = item;
+
+      if (entity && entity.hero) {
+        sp.texture = textures['black'];
+      }
 
       item.dO = sp;
     },

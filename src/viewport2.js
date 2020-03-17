@@ -109,6 +109,10 @@ export default function Viewport({
   };
 
   const iCenter = () => {
+    if (!followPos) {
+      return;
+    }
+
     let targetPos = v.csub(followPos, vHalfBounds);
     let sourcePos = viewDelta;
 

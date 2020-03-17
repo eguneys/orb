@@ -31,7 +31,7 @@ export function app(element, options) {
 
       const keyboard = new Keyboard();
 
-      const events = new Events();
+      const events = new Events(canvas);
 
       events.bindTouch();
       keyboard.bind();

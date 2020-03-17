@@ -14,7 +14,7 @@ export default function Canvas(element) {
     height: displayHeight
   });
 
-  element.appendChild(app.view);  
+  element.appendChild(app.view);
 
   this.withApp = fn => fn(app);
 
