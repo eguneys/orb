@@ -7,8 +7,8 @@ export default function Editor(play, ctx, bs) {
 
   const { textures } = ctx;
 
-  let editArea = new EditArea(play, ctx, bs.editor);
-  let tilePalette = new TilePalette(play, ctx, bs.palette);
+  let editArea = new EditArea(this, ctx, bs.editor);
+  let tilePalette = new TilePalette(this, ctx, bs.palette);
 
   this.init = data => {
     let palette = [
@@ -23,6 +23,8 @@ export default function Editor(play, ctx, bs) {
       palette
     });
   };
+
+  this.selectedTile = () => tilePalette.selected();
   
   this.update = delta => {
     editArea.update(delta);

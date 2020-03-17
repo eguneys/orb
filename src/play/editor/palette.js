@@ -12,10 +12,16 @@ export default function Palette(play, ctx, bs) {
   let palette,
       dPalette;
 
+  let selectedIndex;
+
+  this.selected = () => palette[selectedIndex];
+
   this.init = data => {
     palette = data.palette;
 
     addPaletteTiles();
+
+    selectTile(dPalette[0]);
   };
   
   this.update = delta => {
@@ -35,12 +41,20 @@ export default function Palette(play, ctx, bs) {
 
           let selectedTile = dPalette.find(_ => _.handleMouse(epos));
 
-          console.log(selectedTile);
+          if (selectedTile) {
+            selectTile(selectedTile);
+          }
 
         }
 
       }
     }
+  };
+
+  const selectTile = tile => {
+
+    selectedIndex = tile.index();
+    
   };
 
   let paletteContainer;
@@ -105,6 +119,8 @@ function PaletteTile(play, ctx, bs) {
 
   let d;
 
+  this.index = () => i;
+
   this.init = data => {
 
     i = data.i;
@@ -112,7 +128,6 @@ function PaletteTile(play, ctx, bs) {
     dArea = data.dArea;
 
     d.texture = tile.texture;
-
   };
 
   this.update = delta => {

@@ -28,8 +28,8 @@ export default function EditArea(play, ctx, bs) {
   });
 
   let viewport = new Viewport({
-    vWidth: bs.editWidth,
-    vHeight: bs.editHeight,
+    vWidth: 1000,
+    vHeight: 1000,
     getPosition: ({ worm }) => {
       return v.cscale(worm.pos, tileSize);
     },
@@ -54,6 +54,7 @@ export default function EditArea(play, ctx, bs) {
       let { entity, collision: { visible } } = worm.data();
 
       let pos = worm.pos;
+
       let iPos = (pos[0] + pos[1]) % 2;
 
       if (visible) {
@@ -71,13 +72,21 @@ export default function EditArea(play, ctx, bs) {
     }
   });
 
+  let nbTilesX,
+      nbTilesY;
+
   this.init = data => {
-    worms = new Worms(0, 0, 128, 128);
+    nbTilesX = 128;
+    nbTilesY = 128;
+
+    worms = new Worms(0, 0, nbTilesX, nbTilesY);
 
     objMap(worms.tiles, (key, worm) => {
       viewport.addChild({ worm });
     });
   };
+
+  const selectedTile = () => play.selectedTile();
 
   const handleMouse = () => {
     let { wheel, current } = events.data;
@@ -85,7 +94,13 @@ export default function EditArea(play, ctx, bs) {
     let { editArea } = bs;
 
     if (current) {
-      let { button, epos, dpos } = current;
+      let { button, epos, dpos, tapping } = current;
+
+      if (button === 0 &&
+          tapping &&
+          editArea.containsPoint(...epos)) {
+        editTile(epos);
+      }
 
       if (button === 1) {
         dragView(dpos[0], dpos[1]);
@@ -97,12 +112,37 @@ export default function EditArea(play, ctx, bs) {
     }
 
     if (wheel && editArea.containsPoint(...wheel.epos)) {
-      console.log('here');
       if (wheel.y > 0) {
         scaleUp();
       } else {
         scaleDown();
       }
+    }
+  };
+
+  const viewEventPosition = pos => {
+    let viewArea = viewContainer.getBounds();
+
+    if (viewArea.contains(...pos)) {
+      let x = pos[0] - viewArea.x,
+          y = pos[1] - viewArea.y;
+
+      let tS = viewArea.width / nbTilesX;
+
+      console.log(x, viewArea.width, x / viewArea.width);
+
+      return [Math.floor(x / tS),
+              Math.floor(y / tS)];
+      
+    }
+    return null;
+  };
+
+  const editTile = pos => {
+    let epos = viewEventPosition(pos);
+
+    if (epos) {
+      console.log(epos);
     }
   };
   
