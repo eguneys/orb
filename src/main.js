@@ -53,7 +53,7 @@ export function app(element, options) {
       play.init(data);
 
       let stats = new Stats();
-      document.body.appendChild(stats.dom);
+      // document.body.appendChild(stats.dom);
 
       canvas.withApp(app => {
 

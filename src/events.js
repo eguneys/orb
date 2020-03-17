@@ -71,7 +71,10 @@ export default function Events(canvas) {
 
   const moveWheel = (state) => {
     return (e) => {
-      state.wheel = { y: Math.sign(e.deltaY) };
+      state.wheel = { 
+        epos: eventPosition(e),
+        y: Math.sign(e.deltaY) 
+      };
     };
   };
 

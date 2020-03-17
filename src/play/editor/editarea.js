@@ -1,12 +1,12 @@
-import { objMap } from '../util2';
-import { dContainer, sprite, graphics } from '../asprite';
+import { objMap } from '../../util2';
+import { dContainer, sprite, graphics } from '../../asprite';
 
 import Pool from 'poolf';
 
-import Viewport from '../viewport2';
-import Worms from '../worms';
+import Viewport from '../../viewport2';
+import Worms from '../../worms';
 
-import * as v from '../vec2';
+import * as v from '../../vec2';
 
 export default function EditArea(play, ctx, bs) {
 
@@ -96,7 +96,7 @@ export default function EditArea(play, ctx, bs) {
       }
     }
 
-    if (wheel) {
+    if (wheel && editArea.containsPoint(...wheel.epos)) {
       console.log('here');
       if (wheel.y > 0) {
         scaleUp();

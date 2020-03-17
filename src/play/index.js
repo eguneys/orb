@@ -10,12 +10,29 @@ export default function Play(ctx) {
   const { canvas } = ctx;
 
   let boundsF = canvas.responsiveBounds(({ width, height }) => {
+    let margin = width * 0.01;
 
-    let editX = width * 0.1,
-        editY = height * 0.1,
+    let paletteX = margin,
+        paletteY = margin * 4,
+        paletteWidth = width * 0.1,
+        paletteHeight = height * 0.8,
+        tileSize = paletteWidth * 0.4,
+        paletteArea = rect(paletteX, paletteY, paletteWidth, paletteHeight);
+
+    let editX = paletteX + paletteWidth + margin,
+        editY = paletteY,
         editWidth = width * 0.8,
         editHeight = height * 0.8,
         editArea = rect(editX, editY, editWidth, editHeight);
+
+    let palette = {
+      paletteX,
+      paletteY,
+      paletteWidth,
+      paletteHeight,
+      tileSize,
+      paletteArea
+    };
 
     let editor = {
       editX,
@@ -27,6 +44,7 @@ export default function Play(ctx) {
 
     return {
       editor,
+      palette,
       width,
       height
     };
