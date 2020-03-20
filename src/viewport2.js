@@ -56,15 +56,24 @@ export default function Viewport({
   this.removeChild = (child) => children.release(child);
   this.removeChildren = () => children.releaseAll();
 
-  // this.drag = (v1, scale = 1) => {
-  //   v.setScale(dragDelta, v1, -scale);
-  //   return this;
-  // };
 
-  // this.commitDrag = () => {
-  //   v.add(viewDelta, dragDelta);
-  //   v.scale(dragDelta, 0);
-  // };
+  this.dragDelta = () => dragDelta;
+
+  let dragDeltaBuffer = vec2(0);
+
+  this.drag = (v1, scale = 1) => {
+    v.setScale(dragDeltaBuffer, v1, -scale);
+    return this;
+  };
+
+  this.commitDrag = (limits) => {
+    v.add(dragDelta, dragDeltaBuffer);
+    v.scale(dragDeltaBuffer, 0);
+
+    if (limits) {
+      v.limit(dragDelta, limits);
+    }
+  };
 
   const viewFrame = () => {
     let [x, y] = viewDelta;
@@ -114,7 +123,7 @@ export default function Viewport({
     }
 
     let targetPos = v.csub(followPos, vHalfBounds);
-    let sourcePos = viewDelta;
+    let sourcePos = v.cadd(viewDelta, dragDelta);
 
     let diff = v.csub(targetPos, sourcePos);
 

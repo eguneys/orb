@@ -3,16 +3,18 @@ import PrincePhysics from '../princephysics';
 
 import { throttle, makeRoundDown } from '../util';
 
-export default function Hero(play, ctx, worms) {
-
-  const { width, height } = worms;
+export default function Hero(play, ctx) {
 
   let lastPos;
 
   let phy = new PrincePhysics(detectCollision);
 
+  let worms;
+
   this.init = data => {
-    lastPos = [1, 1];
+    worms = data.worms;
+
+    lastPos = [2, 2];
     worms.addHero(lastPos);
     phy.pos(lastPos[0], lastPos[1]);
   };
@@ -38,9 +40,9 @@ export default function Hero(play, ctx, worms) {
   function detectCollision(pos) {
     let { legs } = worms.heroPos(pos);
 
-    const { collision: { visible } } = worms.getPos(legs);
+    const { entity } = worms.getPos(legs);
 
-    return !visible;
+    return !(entity && !entity.hero && entity.name);
   };
 
   this.update = delta => {

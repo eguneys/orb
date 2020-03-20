@@ -33,10 +33,17 @@ export default function Worms(x, y, w, h) {
     visible: false
   },
   entityEmpty = {
+    visible: false
   },
   entityHero = (part) => ({
+    visible: true,
     hero: true,
+    name: 'floor',
     part
+  }),
+  entityName = (name) => ({
+    visible: true,
+    name
   });
 
   let tiles = this.tiles = {};
@@ -58,6 +65,14 @@ export default function Worms(x, y, w, h) {
     let { collision: { visible } } = this.getPos(pos);
     return visible;
   };
+
+  this.rawEntity = (key, entity) => syncEntity(tiles[key], entity);
+
+  this.entityByKey = (key, name) => syncEntity(tiles[key], entityName(name));
+
+  this.entity = (pos, name) => this.entityByKey(pos2key(pos), name);
+
+  this.removeEntity = pos => syncEntity(tiles[pos2key(pos)], undefined);
 
   const heroPos = this.heroPos = pos => {
     let tileSize = 1;

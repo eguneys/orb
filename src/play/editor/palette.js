@@ -127,7 +127,7 @@ function PaletteTile(play, ctx, bs) {
     tile = data.tile;
     dArea = data.dArea;
 
-    d.texture = tile.texture;
+    d.texture = textures[tile.name];
   };
 
   this.update = delta => {

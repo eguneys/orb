@@ -10,7 +10,7 @@ import * as v from '../../vec2';
 
 export default function EditArea(play, ctx, bs) {
 
-  const { events, textures } = ctx;
+  const { events, textures, levels } = ctx;
 
   const tBgGray = textures['bggray'],
         tLightGray = textures['lightgray'],
@@ -22,67 +22,53 @@ export default function EditArea(play, ctx, bs) {
 
   let worms;
   
-  let turtles = new Pool(() => sprite(tDarkGray), {
-    name: 'Turtles',
-    warnLeak: 128 * 128
-  });
-
-  let viewport = new Viewport({
-    vWidth: 1000,
-    vHeight: 1000,
-    getPosition: ({ worm }) => {
-      return v.cscale(worm.pos, tileSize);
-    },
-    onOn: (item) => {
-      let sp = turtles.acquire(_ => {
-        _.height = tileSize;
-        _.width = tileSize;
-      });
-
-      viewContainer.addChild(sp);
-
-      item.dO = sp;
-    },
-    onOff: (item) => {
-
-      turtles.release(item.dO);
-      viewContainer.removeChild(item.dO);
-
-      delete item.dO;
-    },
-    onView: ({ dO, worm }, visiblePos) => {
-      let { entity, collision: { visible } } = worm.data();
-
-      let pos = worm.pos;
-
-      let iPos = (pos[0] + pos[1]) % 2;
-
-      if (visible) {
-        if (iPos === 0) {
-          dO.texture = tLightGray;
-        } else {
-          dO.texture = tDarkGray;
-        }
-      } else {
-        dO.visible = false;
-      }
-
-      dO.position.x = visiblePos[0];
-      dO.position.y = visiblePos[1];
-    }
-  });
+  let dWorms;
 
   let nbTilesX,
       nbTilesY;
 
   this.init = data => {
-    nbTilesX = 128;
-    nbTilesY = 128;
+    nbTilesX = 64;
+    nbTilesY = 64;
 
     worms = new Worms(0, 0, nbTilesX, nbTilesY);
 
+    addDWorms();
+  };
+
+  this.load = () => {
+    const { test } = levels;
+
+    objMap(test, (key, { entity }) => {
+      if (entity) {
+        worms.rawEntity(key, entity);
+      }
+    });
+  };
+
+  this.worms = () => worms;
+
+  this.saveData = () => {
+    let res = {};
     objMap(worms.tiles, (key, worm) => {
-      viewport.addChild({ worm });
+      res[key] = worm.data();
+    });
+    return JSON.stringify(res);
+  };
+
+  const addDWorms = () => {
+    dWorms = {};
+
+
+    objMap(worms.tiles, (key, worm) => {
+
+      let dO = sprite(tLightGray);
+      dO.width = tileSize;
+      dO.height = tileSize;
+      dO.position.set(worm.pos[0] * tileSize, worm.pos[1] * tileSize);
+
+      dWorms[key] = dO;
+      viewContainer.addChild(dO);
     });
   };
 
@@ -97,7 +83,7 @@ export default function EditArea(play, ctx, bs) {
       let { button, epos, dpos, tapping } = current;
 
       if (button === 0 &&
-          tapping &&
+          // tapping &&
           editArea.containsPoint(...epos)) {
         editTile(epos);
       }
@@ -127,12 +113,11 @@ export default function EditArea(play, ctx, bs) {
       let x = pos[0] - viewArea.x,
           y = pos[1] - viewArea.y;
 
-      let tS = viewArea.width / nbTilesX;
+      let tW = viewArea.width / nbTilesX,
+          tH = viewArea.height / nbTilesY;
 
-      console.log(x, viewArea.width, x / viewArea.width);
-
-      return [Math.floor(x / tS),
-              Math.floor(y / tS)];
+      return [Math.floor(x / tW),
+              Math.floor(y / tH)];
       
     }
     return null;
@@ -142,7 +127,14 @@ export default function EditArea(play, ctx, bs) {
     let epos = viewEventPosition(pos);
 
     if (epos) {
-      console.log(epos);
+      console.log(pos, epos);
+      let { name: selectedTile } = play.selectedTile();
+
+      if (selectedTile === 'empty') {
+        worms.removeEntity(epos);
+      } else {
+        worms.entity(epos, selectedTile);
+      }
     }
   };
   
@@ -152,9 +144,34 @@ export default function EditArea(play, ctx, bs) {
 
     updateViewDrag();
     updateScale();
-    viewport.update(delta);
+
+    updateView();
   };
 
+
+  const updateView = () => {
+
+    objMap(worms.tiles, (key, worm) => {
+      
+      let dO = dWorms[key];
+
+      let { entity } = worm.data();
+
+      let pos = worm.pos;
+
+      let iPos = (pos[0] + pos[1]) % 2;
+
+      if (entity) {
+        dO.texture = textures[entity.name];
+      } else {
+        if (iPos === 0) {
+          dO.texture = tLightGray;
+        } else {
+          dO.texture = tDarkGray;
+        }
+      }
+    });
+  };
 
   let vViewPos = v.vec2(0),
       vViewDrag = v.vec2(0);

@@ -1,38 +1,49 @@
 import { dContainer } from '../asprite';
 
-import Tiles from './tiles';
-import Cats from './cats';
+
+import Disciples from '../disciples';
+import DisciplesView from './disciples';
 
 export default function Board(play, ctx) {
 
-  let tiles = new Tiles(this, ctx),
-      cats = new Cats(this, ctx);
+  const { canvas } = ctx;
+
+  let boundsF = canvas.responsiveBounds(({ width, height }) => {
+    return {
+      width,
+      height
+    };
+  });
+
+  let bs = boundsF();
+
+  let dDisciples = new DisciplesView(this, ctx, bs);
+
 
   this.init = data => {
     this.data = data;
-    tiles.init({});
-    cats.init({});
+
+    let disciples = new Disciples();
+    disciples.init({ map: 0 });
+
+    dDisciples.init({
+      disciples
+    });
   };
 
-  this.visibles = tiles.visibles;
-  
   this.update = delta => {
-    tiles.update(delta);
-    cats.update(delta);
+    dDisciples.update(delta);
   };
 
   const container = this.container = dContainer();
   
   const initContainer = () => {
-    container.addChild(cats.container);
-    container.addChild(tiles.container);
+    container.addChild(dDisciples.container);
+    // container.addChild(tiles.container);
   };
 
   initContainer();
 
-  this.render = () => {
-    tiles.render();
-    cats.render();
-  };
+  this.render = () => {};
 
 }

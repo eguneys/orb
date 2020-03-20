@@ -1,3 +1,7 @@
+export function callUserFunction(f, ...args) {
+  if (f) setTimeout(() => f(...args), 1);
+}
+
 export function noop() {};
 
 export function makeRoundDown(multiple) {

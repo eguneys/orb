@@ -13,6 +13,13 @@ export function equal(v0, v1) {
     v0[1] === v1[1];
 }
 
+export function limit(v0, limits) {
+  v0[0] = Math.max(v0[0], limits[0]);
+  v0[0] = Math.min(v0[0], limits[1]);
+  v0[1] = Math.max(v0[1], limits[2]);
+  v0[1] = Math.min(v0[1], limits[3]);
+};
+
 export function makeMap(f) {
   return v0 => {
     v0[0] = f(v0[0]);

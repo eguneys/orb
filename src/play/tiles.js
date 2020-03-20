@@ -9,10 +9,8 @@ import Pool from 'poolf';
 
 import Viewport from '../viewport2';
 import Worms from '../worms';
-import Cats from '../cats';
 
 import Hero from './hero';
-import Smoke from './smoke';
 
 export default function Tiles(play, ctx) {
   const { canvas, textures, events, keyboard, config } = ctx;
@@ -30,7 +28,7 @@ export default function Tiles(play, ctx) {
 
   let visibleHeroPos;
 
-  let turtles = new Pool(() => sprite(textures['white']), {
+  let turtles = new Pool(() => sprite(textures['floor']), {
     name: 'Turtles',
     warnLeak: 20000
   });
@@ -89,14 +87,14 @@ export default function Tiles(play, ctx) {
 
   let worms = new Worms(0, 0, bs.width / (bs.tileSize / 2), bs.height / bs.tileSize);
 
-  let hero = new Hero(play, ctx, worms);
+  let hero = new Hero(play, ctx);
 
   this.init = data => {
     let bs = boundsF();
 
     genWorms(worms);
 
-    hero.init({});
+    hero.init({ worms });
 
     objMap(worms.tiles, (key, worm) => {
       viewport.addChild({ worm });
@@ -114,7 +112,7 @@ export default function Tiles(play, ctx) {
 
   const container = this.container = dContainer();
   initContainer();
-
+  
   const maybeMove = delta => {
     hero.move(keyboard.data);
   };

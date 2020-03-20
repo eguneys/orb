@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 
 export default function sprites(resources) {
 
+  const texture = name => resources[name].texture;
   const ssTextures = name => resources[name].spritesheet.textures;
 
   return {
@@ -11,19 +12,17 @@ export default function sprites(resources) {
     'bggray': bgTexture('#333333'),
     'lightgray': bgTexture('#eeeeee'),
     'darkgray': bgTexture('#aaaaaa'),
-    'moonclouds': resources['moonclouds'].texture,
-    'mountainstiled': resources['mountainstiled'].texture,
-    'orb': ssTextures('orb')['orb.aseprite'],
-    'heart': ssTextures('heart')['hearth.aseprite'],
-    'hud': ssTextures('hud')['Sprite-0001.'],
-    'smoke': animationTextures(ssTextures('smoke'),
-                               'smoke %.aseprite', 12),
-    'magic': animationTextures(ssTextures('magic'),
-                               'magic %.aseprite', 6),    
-    'flame': animationTextures(ssTextures('flame'),
-                               'flame %.aseprite', 6)
+    'earth': frameTexture(texture('disciples'), [0, 0, 16, 16]),
+    'water': frameTexture(texture('disciples'), [16, 16, 16, 16]),
   };
 }
+
+const frameTexture = (texture, frame) => {
+  let rect = new PIXI.Rectangle(frame[0], frame[1], frame[2], frame[3]);
+  let t = new PIXI.Texture(texture);
+  t.frame = rect;
+  return t;
+};
 
 const animationTextures = (textures, rName, frames) => {
   let res = [];

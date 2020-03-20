@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import sprites from './sprites';
+import levels from './levels';
 
 import Config from './config';
 import Canvas from './canvas';
@@ -9,23 +10,21 @@ import Play from './play';
 
 import Stats from 'stats.js';
 
-export function app(element, options) {
+export function app(element, options = {}) {
 
-  const config = Config();
+  const config = Config(options);
   const canvas = new Canvas(element);
 
   let play;
   
   PIXI.Loader.shared
+    .add('test', 'data/test.json')
     .add('orb', "data/orb/orb.json")
-    .add('heart', "data/orb/hearth.json")
-    .add('flame', "data/orb/flame.json")
-    .add('smoke', "data/orb/smoke.json")
-    .add('magic', "data/orb/magic.json")
     .add('hud', 'data/orb/Sprite-Hud-0001.json')
-    .add('moonclouds', "data/orb/moonclouds.png")
-    .add('mountainstiled', "data/orb/mountainstiled.png")
+    .add('disciples', 'assets/images/disciples.png')
     .load((loader, resources) => {
+
+      const levelData = levels(resources);
 
       const textures = sprites(resources);
 
@@ -42,6 +41,7 @@ export function app(element, options) {
         canvas,
         config,
         textures,
+        levels: levelData,
         events,
         keyboard
       };

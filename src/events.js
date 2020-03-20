@@ -94,6 +94,7 @@ export default function Events(canvas) {
 
   function startTouch(state) {
     return function(e) {
+      e.preventDefault();
       const tPos = eventPosition(e);
       state.current = {
         button: e.button,
@@ -107,10 +108,11 @@ export default function Events(canvas) {
 
   function moveTouch(state) {
     return function(e) {
+      const tPos = eventPosition(e);
       if (state.current) {
-        const tPos = eventPosition(e);
         state.current.epos = tPos;
       }
+      state.epos = tPos;
     };
   }
 

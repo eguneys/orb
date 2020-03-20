@@ -33,17 +33,34 @@
          margin: auto;
      }
 
+     #save {
+         margin: 10px;
+     }
+
     </style>
 </head>
 <body>
   <section>
     <div id="app"></div>
-
+    <!-- 
+         <h2>Save</h2>
+         <textarea id="save" rows="2" cols="40"></textarea> -->
   </section>
 
   <script>
 
-   Tetris(document.getElementById('app'), {});
+   Tetris(document.getElementById('app'), {
+     events: {
+       onSave: (data) => {
+         save(data);
+       }
+     }
+   });
+
+
+   function save(data) {
+     document.getElementById('save').value = data;
+   }
    
   </script>
 
