@@ -8,7 +8,8 @@ import * as v from '../vec2';
 
 const textureKeyByRole = {
   'GROUND': 'earth',
-  'WATER': 'water'
+  'WATER': 'water',
+  'WATERBITMASK': 'waterBitmask'
 };
 
 export default function Disciples(play, ctx, bs) {
@@ -19,7 +20,7 @@ export default function Disciples(play, ctx, bs) {
 
   let dTiles;
 
-  let tileSize = 16;
+  let tileSize = 20;
 
   let dGround;
 
@@ -39,9 +40,26 @@ export default function Disciples(play, ctx, bs) {
         _.width = tileSize;
       });
       dGround.addChild(sp);
+
+      let texture;
+
       let { tile: { role } } = item;
 
-      sp.texture = textures[textureKeyByRole[role]];
+      if (role === 'WATER') {
+
+        let bitmaskTexture = textures[textureKeyByRole['WATERBITMASK']];
+
+        let nS = disciples.getNeighbors(item.pos);
+
+        let bitmaskKey = disciples.getBitmaskTextureKey(role, nS);
+
+        texture = bitmaskTexture[bitmaskKey];
+
+      } else {
+        texture = textures[textureKeyByRole[role]];
+      }
+
+      sp.texture = texture;
 
       item.dO = sp;
     },
@@ -72,7 +90,10 @@ export default function Disciples(play, ctx, bs) {
   };
 
   const handleMouse = () => {
-    let { width, height } = bs;
+    let { width: wW, height: wH } = disciples;
+
+    let { width, height, 
+          minimap: { width: miniW } } = bs;
 
     const { epos } = events.data;
 
@@ -83,7 +104,10 @@ export default function Disciples(play, ctx, bs) {
     let v = vEdge(epos);
 
     viewport0.drag(v, -8);
-    viewport0.commitDrag([-tileSize * 10, width - tileSize * 5, -tileSize * 10, height + tileSize * 10]);
+    viewport0.commitDrag([-tileSize * 10,
+                          (wW * tileSize) - (width - miniW * 1.5),
+                          -tileSize * 10,
+                          (wH - (height / tileSize) * 0.8) * tileSize]);
   };
 
   const vEdge = pos => {

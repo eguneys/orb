@@ -7,7 +7,7 @@ export function objForeach(obj, f) {
 export function objMap(obj, f) {
   let res = {};
 
-  return Object.keys(obj).forEach(key => {
+  Object.keys(obj).forEach(key => {
     res[key] = f(key, obj[key]);
   });
   return res;

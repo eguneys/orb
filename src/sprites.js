@@ -14,8 +14,30 @@ export default function sprites(resources) {
     'darkgray': bgTexture('#aaaaaa'),
     'earth': frameTexture(texture('disciples'), [0, 0, 16, 16]),
     'water': frameTexture(texture('disciples'), [16, 16, 16, 16]),
+    'waterBitmask': bitmaskTextures(texture('disciples'), [64, 32], 16)
   };
 }
+
+const bitmaskTextures = (t, origin, sz) => {
+  let res = {};
+
+  let x= origin[0],
+      y = origin[1];
+
+  res.ne = frameTexture(t, [x + sz * 0, y, sz, sz]);
+  res.n  = frameTexture(t, [x + sz * 1, y, sz, sz]);
+  res.nw = frameTexture(t, [x + sz * 2, y, sz, sz]);
+
+  res.e = frameTexture(t, [x + sz * 0, y + sz * 1, sz, sz]);
+  res.m = frameTexture(t, [x + sz * 1, y + sz * 1, sz, sz]);
+  res.w = frameTexture(t, [x + sz * 2, y + sz * 1, sz, sz]);
+
+  res.se = frameTexture(t, [x + sz * 0, y + sz * 2, sz, sz]);
+  res.s  = frameTexture(t, [x + sz * 1, y + sz * 2, sz, sz]);
+  res.sw = frameTexture(t, [x + sz * 2, y + sz * 2, sz, sz]);
+
+  return res;
+};
 
 const frameTexture = (texture, frame) => {
   let rect = new PIXI.Rectangle(frame[0], frame[1], frame[2], frame[3]);
